@@ -13,7 +13,6 @@ class Ponto():
         self.caracter = caracter
         self.x = round(x)
         self.y = round(y)
-
     def __eq__(self, other):
         return self.x == other.x and self.y == other.y and self.caracter == other.caracter
 
@@ -43,7 +42,7 @@ class Fase():
 
         :param obstaculos:
         """
-        pass
+        self._obstaculos.extend(obstaculos)
 
     def adicionar_porco(self, *porcos):
         """
@@ -51,7 +50,7 @@ class Fase():
 
         :param porcos:
         """
-        pass
+        self._porcos.extend(porcos)
 
     def adicionar_passaro(self, *passaros):
         """
@@ -59,7 +58,7 @@ class Fase():
 
         :param passaros:
         """
-        pass
+        self._passaros.extend(passaros)
 
     def status(self):
         """
@@ -73,7 +72,12 @@ class Fase():
 
         :return:
         """
-        return EM_ANDAMENTO
+        if not self._possui_porco_ativo():
+            return VITORIA
+        elif self._possui_passaros_ativos():
+            return EM_ANDAMENTO
+        else:
+            return DERROTA
 
     def lancar(self, angulo, tempo):
         """
@@ -105,3 +109,14 @@ class Fase():
     def _transformar_em_ponto(self, ator):
         return Ponto(ator.x, ator.y, ator.caracter())
 
+    def _possui_porco_ativo(self):
+        for porco in self._porcos:
+            if porco.status==ATIVO:
+                return True
+        return False
+
+    def _possui_passaros_ativos(self):
+        for passaro in self._passaros:
+            if passaro.status == ATIVO:
+                return True
+        return False
